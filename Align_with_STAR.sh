@@ -60,6 +60,7 @@ echo "inFile1 $inFile1 inFile2 $inFile2"
 CommandPE="STAR --genomeDir $STARDir \
 --readFilesIn $inFile1 $inFile2 \
 --outFileNamePrefix $outDir/$sample. \
+--readFilesCommand zcat \
 --outReadsUnmapped None \
 --twopassMode Basic \
 --outSAMstrandField intronMotif \
@@ -85,6 +86,7 @@ CommandSE="STAR --genomeDir $STARDir \
 --outReadsUnmapped None \
 --twopassMode Basic \
 --outFileNamePrefix $outDir/$sample. \
+--readFilesCommand zcat \
 --outSAMstrandField intronMotif \
 --outSAMunmapped Within \
 --chimSegmentMin 12 \
