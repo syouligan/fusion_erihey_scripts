@@ -60,8 +60,8 @@ echo "outFile1 $outFile1 outFile2 $outFile2"
 
 # Command to be executed
 CommandSE="fastp --thread $ncores -q 10 -i $inFile1 -o $outFile1"
-CommandPE="fastp --thread $ncores -q 10 -i $inFile1 -I $inFile2 -o $outFile1 -O $outFile1"
-CommandUMI="fastp --thread $ncores -f12 -t 12 -F 12 -T 12 -q 10 -i $inFile1 -I $inFile2 -o $outFile1 -O $outFile1"
+CommandPE="fastp --thread $ncores -q 10 -i $inFile1 -I $inFile2 -o $outFile1 -O $outFile2"
+CommandUMI="fastp --thread $ncores --trim_front1 12 --trim_tail1 12 --trim_front2 12 --trim_tail2 12 -q 10 -i $inFile1 -I $inFile2 -o $outFile1 -O $outFile2"
 
 # Submit to queue
 if [ $paired = "yes" ]
