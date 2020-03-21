@@ -7,7 +7,6 @@
 ncores=20
 
 # Experimental info (update for single or paired reads, and readlength). Set paired to "yes" if appropriate. NOTE: reads are assumed to be stranded.
-paired="yes"
 readLength=125
 project="fusion_erihey"
 genome="GRCh38_w_ercc"
@@ -38,10 +37,10 @@ echo "# in samples array ${#sample_arr[@]}"
 echo "names in samples array ${sample_arr[@]}"
 
 # Submit command for each sample in array
-for sample in ${sample_arr[@]}; do
+# for sample in ${sample_arr[@]}; do
 
 # Runs loop for only the first sample in array (used for development)
-# for sample in ${sample_arr[0]}; do
+for sample in ${sample_arr[0]}; do
 
 # Define input directory, define and make output and log directories
 inPath=$sample_Path/$sample
@@ -57,64 +56,61 @@ inFile2=$inPath/$sample"_trimmed_R2.fastq.gz"
 echo "inFile1 $inFile1 inFile2 $inFile2"
 
 # Command to be executed
-CommandPE="STAR --genomeDir $STARDir \
-          --readFilesIn $inFile1 $inFile2 \
-          --outReadsUnmapped None \
-          --twopassMode Basic \
-          --readFilesCommand "gunzip -c" \
-          --outSAMstrandField intronMotif \
-          --outSAMunmapped Within \
-          --chimSegmentMin 12 \
-          --chimJunctionOverhangMin 12 \
-          --chimOutJunctionFormat 1 \
-          --alignSJDBoverhangMin 10 \
-          --alignMatesGapMax 100000 \
-          --alignIntronMax 100000 \
-          --alignSJstitchMismatchNmax 5 -1 5 5 \
-          --outSAMattrRGline ID:GRPundef \
-          --chimMultimapScoreRange 3 \
-          --chimScoreJunctionNonGTAG -4 \
-          --chimMultimapNmax 20 \
-          --chimNonchimScoreDropMin 10 \
-          --runThreadN $ncores \
-          --peOverlapNbasesMin 12 \
-          --peOverlapMMp 0.1 \
-          --outFileNamePrefix $outDir/$sample."
+Commandfusion="STAR --genomeDir $STARDir \
+--readFilesIn $inFile1 $inFile2 \
+--outFileNamePrefix $outDir/$sample. \
+--outReadsUnmapped None \
+--twopassMode Basic \
+--outSAMstrandField intronMotif \
+--outSAMunmapped Within \
+--chimSegmentMin 12 \
+--chimJunctionOverhangMin 12 \
+--chimOutJunctionFormat 1 \
+--alignSJDBoverhangMin 10 \
+--alignMatesGapMax 100000 \
+--alignIntronMax 100000 \
+--alignSJstitchMismatchNmax 5 -1 5 5 \
+--outSAMattrRGline ID:GRPundef \
+--chimMultimapScoreRange 3 \
+--chimScoreJunctionNonGTAG -4 \
+--chimMultimapNmax 20 \
+--chimNonchimScoreDropMin 10 \
+--runThreadN $ncores \
+--peOverlapNbasesMin 12 \
+--peOverlapMMp 0.1"
 
-CommandSE="STAR --genomeDir $STARDir \
-          --readFilesIn $inFile1 \
-          --outReadsUnmapped None \
-          --twopassMode Basic \
-          --readFilesCommand "gunzip -c" \
-          --outSAMstrandField intronMotif \
-          --outSAMunmapped Within \
-          --chimSegmentMin 12 \
-          --chimJunctionOverhangMin 12 \
-          --chimOutJunctionFormat 1 \
-          --alignSJDBoverhangMin 10 \
-          --alignMatesGapMax 100000 \
-          --alignIntronMax 100000 \
-          --alignSJstitchMismatchNmax 5 -1 5 5 \
-          --outSAMattrRGline ID:GRPundef \
-          --chimMultimapScoreRange 3 \
-          --chimScoreJunctionNonGTAG -4 \
-          --chimMultimapNmax 20 \
-          --chimNonchimScoreDropMin 10 \
-          --runThreadN $ncores \
-          --peOverlapNbasesMin 12 \
-          --peOverlapMMp 0.1 \
-          --outFileNamePrefix $outDir/$sample."
+Commandnormal="STAR --genomeDir $STARDir \
+--outFileNamePrefix $outDir/$sample. \
+--readFilesIn $inFile1 $inFile2 \
+--outSAMunmapped Within \
+--outFilterType BySJout \
+--outSAMattributes NH HI AS NM MD \
+--outFilterMultimapNmax 20 \
+--outFilterMismatchNmax 999 \
+--outFilterMismatchNoverReadLmax 0.04 \
+--alignIntronMin 20 \
+--alignIntronMax 1000000 \
+--alignMatesGapMax 1000000 \
+--alignSJoverhangMin 8 \
+--alignSJDBoverhangMin 1 \
+--sjdbScore 1 \
+--readFilesCommand zcat \
+--runThreadN $ncores \
+--limitBAMsortRAM 10000000000 \
+--outSAMtype BAM SortedByCoordinate \
+--quantMode TranscriptomeSAM \
+--outWigStrand Stranded"
 
 # Submit to queue
-if [ $paired = "yes" ]
+if [[ $sample == "merged" ]]
 then
-echo "CommandPE "$CommandPE
-# $CommandPE
-qsub -P OsteoporosisandTranslationalResearch -N $tool$sample -b y -hold_jid 'fastp'$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandPE
+echo "Commandfusion " $Commandfusion
+$Commandfusion
+# qsub -P OsteoporosisandTranslationalResearch -N $tool$sample -b y -hold_jid 'fastp'$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $Commandfusion
 else
-  echo "CommandSE "$CommandSE
-# $CommandSE
-qsub -P OsteoporosisandTranslationalResearch -N $tool$sample -b y -hold_jid 'fastp'$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandSE
+  echo "Commandnormal "$Commandnormal
+$Commandnormal
+# qsub -P OsteoporosisandTranslationalResearch -N $tool$sample -b y -hold_jid 'fastp'$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $Commandnormal
 fi
 
 done
