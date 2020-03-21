@@ -105,7 +105,7 @@ CommandSE="STAR --genomeDir $STARDir \
 --peOverlapNbasesMin 12 \
 --peOverlapMMp 0.1"
 
-# Submit to queue
+# Submit to queue each sample
 if [ $paired = "yes" ]
 then
 echo "CommandPE "$CommandPE
