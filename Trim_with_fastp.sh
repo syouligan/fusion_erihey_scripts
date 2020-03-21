@@ -4,7 +4,7 @@
 #######
 
 # Number of cores
-ncores=12
+ncores=6
 
 # Experimental info (update for single or paired reads)
 paired="yes"
