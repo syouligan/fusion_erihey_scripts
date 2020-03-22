@@ -108,11 +108,11 @@ if [ $paired = "yes" ]
 then
 echo "CommandPE "$CommandPE
 # $CommandPE
-qsub -P OsteoporosisandTranslationalResearch -N $tool$parameters$sample -b y -hold_jid 'fastp'$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandPE
+qsub -P OsteoporosisandTranslationalResearch -N $tool$sample -b y -hold_jid 'fastp'$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandPE
 else
   echo "CommandSE "$CommandSE
 # $CommandSE
-qsub -P OsteoporosisandTranslationalResearch -N $tool$parameters$sample -b y -hold_jid 'fastp'$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandSE
+qsub -P OsteoporosisandTranslationalResearch -N $tool$sample -b y -hold_jid 'fastp'$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandSE
 fi
 
 done

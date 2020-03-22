@@ -1,10 +1,10 @@
 #!/bin/bash
 
-## Quantify with RSEM with encode parameters
+## Subsets STAR bam files to only uniquely aligned read pairs
 #######
 
 # Number of cores
-ncores=8
+ncores=2
 
 # Experimental info (update for single or paired reads, and readlength). Set paired to "yes" if appropriate. NOTE: reads are assumed to be stranded.
 paired="yes"
@@ -14,7 +14,7 @@ genome="GRCh38_w_ercc"
 
 homedir="/share/ScratchGeneral/scoyou/sarah_projects"
 data="STAR_ENCODE"
-tool="RSEM"
+tool="STAR_ENCODE"
 results="project_results"
 QCDir="logs"
 inFileExt=".Aligned.toTranscriptome.out.bam"
@@ -48,7 +48,6 @@ inPath=$sample_Path/$sample
 echo "inPath $inPath"
 
 outDir=$homedir/$project/$results/$tool/$sample
-mkdir -p $outDir
 echo "outDir $outDir"
 
 # Define input files
@@ -56,35 +55,18 @@ inFile1=$inPath/*$inFileExt
 echo "inFile1 $inFile1"
 
 # Command to be executed
-CommandPE="rsem-calculate-expression --bam $inFile1 \
---estimate-rspd \
---no-bam-output \
---seed 12345 \
---num-threads $ncores \
---paired-end \
---forward-prob 0 \
-$RSEMDir \
-$outDir/$sample"
-
-CommandSE="rsem-calculate-expression --bam  $inFile1 \
---estimate-rspd \
---no-bam-output \
---seed 12345 \
---num-threads $ncores \
---forward-prob 0 \
-$RSEMDir \
-$outDir/$sample"
+CommandPE="samtools view -q255 -b -f 0x2 -o $outDir/$sample'.Aligned.toTranscriptome.out.unique.bam' $inFile1"
 
 # Submit to queue
 if [ $paired = "yes" ]
 then
 echo "CommandPE "$CommandPE
 # $CommandPE
-qsub -P OsteoporosisandTranslationalResearch -N $tool$sample -b y -hold_jid $data$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandPE
+qsub -P OsteoporosisandTranslationalResearch -N $tool$sample'.unique' -b y -hold_jid $data$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandPE
 else
   echo "CommandSE "$CommandSE
 # $CommandSE
-qsub -P OsteoporosisandTranslationalResearch -N $tool$sample -b y -hold_jid $data$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandSE
+qsub -P OsteoporosisandTranslationalResearch -N $tool$sample'.unique' -b y -hold_jid $data$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandSE
 fi
 
 done
