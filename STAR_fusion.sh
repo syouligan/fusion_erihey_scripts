@@ -4,7 +4,7 @@
 #######
 
 # Number of cores
-ncores=12
+ncores=20
 
 # Experimental info (update for single or paired reads, and readlength). Set paired to "yes" if appropriate. NOTE: reads are assumed to be stranded.
 project="fusion_erihey"
