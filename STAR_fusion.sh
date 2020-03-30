@@ -49,7 +49,7 @@ inFile1=$inPath/$sample"_trimmed_R1.fastq.gz"
 inFile2=$inPath/$sample"_trimmed_R2.fastq.gz"
 echo "inFile1 $inFile1 inFile2 $inFile2"
 
-# Command to be executed
+# Command to be executed.
 Command="/share/ScratchGeneral/scoyou/local/bin/STAR-Fusion-v1.8.0_FULL/STAR-Fusion --genome_lib_dir /share/ScratchGeneral/scoyou/local/resources/GRCh38_gencode_v32_CTAT_lib_Dec062019.plug-n-play/ctat_genome_lib_build_dir \
              --left_fq $inFile1 \
              --right_fq $inFile2 \
