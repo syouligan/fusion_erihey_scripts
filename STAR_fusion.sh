@@ -54,8 +54,6 @@ Command="/share/ScratchGeneral/scoyou/local/bin/STAR-Fusion-v1.8.0_FULL/STAR-Fus
              --left_fq $inFile1 \
              --right_fq $inFile2 \
              --CPU $ncores \
-             --min_junction_reads 5 \
-             --min_sum_frags 10 \
              --examine_coding_effect \
              --extract_fusion_reads \
              --FusionInspector validate \
