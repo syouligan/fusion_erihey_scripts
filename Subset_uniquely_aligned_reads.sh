@@ -54,8 +54,8 @@ echo "outDir $outDir"
 inFile1=$inPath/*$inFileExt
 echo "inFile1 $inFile1"
 
-# Command to be executed
-CommandPE="samtools view -q255 -b -f 0x2 -o $outDir/$sample'.Aligned.toTranscriptome.out.unique.bam' $inFile1"
+# Command to be executed. Removes reads that are unmapped (0x4), or fail platform/vendor quality checks (0x200) or are read is PCR or optical duplicate (0x400) and have a MAPQ below 10.
+CommandPE="samtools view -q 10 -b -f 1540 -o $outDir/$sample'.Aligned.toTranscriptome.out.unique.bam' $inFile1"
 
 # Submit to queue
 if [ $paired = "yes" ]
