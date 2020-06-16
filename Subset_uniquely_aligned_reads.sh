@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Subsets STAR bam files to only uniquely aligned read pairs
+## Subsets STAR bam files to only uniquely aligned, high quality, non-duplicated read pairs
 #######
 
 # Number of cores
