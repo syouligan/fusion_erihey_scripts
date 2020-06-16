@@ -17,7 +17,7 @@ data="STAR_ENCODE"
 tool="RSEM"
 results="project_results"
 QCDir="logs"
-inFileExt=".Aligned.toTranscriptome.out.unique.bam"
+inFileExt=".Aligned.toTranscriptome.out.DeDupped.bam"
 
 genomeDir="/share/ClusterShare/biodata/contrib/scoyou"
 species="genomes/human"
@@ -65,7 +65,7 @@ CommandPE="rsem-calculate-expression --bam $inFile1 \
 --paired-end \
 --forward-prob 0 \
 $RSEMDir \
-$outDir/$sample'.unique'"
+$outDir/$sample'.dedupped'"
 
 CommandSE="rsem-calculate-expression --bam  $inFile1 \
 --estimate-rspd \
@@ -75,18 +75,18 @@ CommandSE="rsem-calculate-expression --bam  $inFile1 \
 --num-threads $ncores \
 --forward-prob 0 \
 $RSEMDir \
-$outDir/$sample'.unique'"
+$outDir/$sample'.dedupped'"
 
 # Submit to queue
 if [ $paired = "yes" ]
 then
 echo "CommandPE "$CommandPE
 # $CommandPE
-qsub -P OsteoporosisandTranslationalResearch -N $tool$sample'.unique' -b y -hold_jid $data$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandPE
+qsub -P OsteoporosisandTranslationalResearch -N $tool$sample'.dedupped' -b y -hold_jid $data$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandPE
 else
   echo "CommandSE "$CommandSE
 # $CommandSE
-qsub -P OsteoporosisandTranslationalResearch -N $tool$sample'.unique' -b y -hold_jid $data$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandSE
+qsub -P OsteoporosisandTranslationalResearch -N $tool$sample'.dedupped' -b y -hold_jid $data$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandSE
 fi
 
 done

@@ -58,7 +58,8 @@ echo "inFile1 $inFile1"
 # Command to be executed
 CommandPE="rsem-calculate-expression --bam $inFile1 \
 --estimate-rspd \
---no-bam-output \
+--output-genome-bam \
+--sampling-for-bam \
 --seed 12345 \
 --num-threads $ncores \
 --paired-end \
@@ -68,7 +69,8 @@ $outDir/$sample"
 
 CommandSE="rsem-calculate-expression --bam  $inFile1 \
 --estimate-rspd \
---no-bam-output \
+--output-genome-bam \
+--sampling-for-bam \
 --seed 12345 \
 --num-threads $ncores \
 --forward-prob 0 \

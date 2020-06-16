@@ -1,10 +1,10 @@
 #!/bin/bash
 
-## Quantify uniquely aligned reads with RSEM with encode parameters
+## Subsets STAR bam files to only uniquely aligned, high quality, non-duplicated read pairs
 #######
 
 # Number of cores
-ncores=8
+ncores=2
 
 # Experimental info (update for single or paired reads, and readlength). Set paired to "yes" if appropriate. NOTE: reads are assumed to be stranded.
 paired="yes"
@@ -14,10 +14,10 @@ genome="GRCh38_w_ercc"
 
 homedir="/share/ScratchGeneral/scoyou/sarah_projects"
 data="STAR_ENCODE"
-tool="RSEM"
+tool="STAR_ENCODE"
 results="project_results"
 QCDir="logs"
-inFileExt=".Aligned.toTranscriptome.out.unique.bam"
+inFileExt=".Aligned.toTranscriptome.out.bam"
 
 genomeDir="/share/ClusterShare/biodata/contrib/scoyou"
 species="genomes/human"
@@ -48,45 +48,25 @@ inPath=$sample_Path/$sample
 echo "inPath $inPath"
 
 outDir=$homedir/$project/$results/$tool/$sample
-mkdir -p $outDir
 echo "outDir $outDir"
 
 # Define input files
 inFile1=$inPath/*$inFileExt
 echo "inFile1 $inFile1"
 
-# Command to be executed. BAM flags set to allow exon quantification https://groups.google.com/forum/#!topic/rsem-users/f7oYPzrCtqY.
-CommandPE="rsem-calculate-expression --bam $inFile1 \
---estimate-rspd \
---output-genome-bam \
---sampling-for-bam \
---seed 12345 \
---num-threads $ncores \
---paired-end \
---forward-prob 0 \
-$RSEMDir \
-$outDir/$sample'.unique'"
-
-CommandSE="rsem-calculate-expression --bam  $inFile1 \
---estimate-rspd \
---output-genome-bam \
---sampling-for-bam \
---seed 12345 \
---num-threads $ncores \
---forward-prob 0 \
-$RSEMDir \
-$outDir/$sample'.unique'"
+# Command to be executed. Removes reads that do not fail platform/vendor quality checks (0x200) or are read is PCR or optical duplicates (0x400). Flag set using this tool https://broadinstitute.github.io/picard/explain-flags.html
+CommandPE="samtools view -b -F1536 -o $outDir/$sample'.Aligned.toTranscriptome.out.DeDupped.bam' $inFile1"
 
 # Submit to queue
 if [ $paired = "yes" ]
 then
 echo "CommandPE "$CommandPE
 # $CommandPE
-qsub -P OsteoporosisandTranslationalResearch -N $tool$sample'.unique' -b y -hold_jid $data$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandPE
+qsub -P OsteoporosisandTranslationalResearch -N $tool$sample'.dedupped' -b y -hold_jid $data$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandPE
 else
   echo "CommandSE "$CommandSE
 # $CommandSE
-qsub -P OsteoporosisandTranslationalResearch -N $tool$sample'.unique' -b y -hold_jid $data$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandSE
+qsub -P OsteoporosisandTranslationalResearch -N $tool$sample'.dedupped' -b y -hold_jid $data$sample -wd $logDir -j y -R y -l mem_requested=8G -pe smp $ncores -V -m bea -M s.youlten@garvan.org.au $CommandSE
 fi
 
 done
