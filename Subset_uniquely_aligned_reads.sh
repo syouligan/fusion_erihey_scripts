@@ -54,8 +54,8 @@ echo "outDir $outDir"
 inFile1=$inPath/*$inFileExt
 echo "inFile1 $inFile1"
 
-# Command to be executed
-CommandPE="samtools view -q255 -b -f 0x2 -o $outDir/$sample'.Aligned.toTranscriptome.out.unique.bam' $inFile1"
+# Command to be executed. Removes reads that are not the primary alignment, or fail platform/vendor quality checks (0x200) or are read is PCR or optical duplicate (0x400). Flag set using this tool https://broadinstitute.github.io/picard/explain-flags.html
+CommandPE="samtools view -b -q255 -F1792 -o $outDir/$sample'.Aligned.toTranscriptome.out.unique.bam' $inFile1"
 
 # Submit to queue
 if [ $paired = "yes" ]
