@@ -78,6 +78,7 @@ CommandPE="STAR --genomeDir $STARDir \
 --runThreadN $ncores \
 --limitBAMsortRAM 10000000000 \
 --outSAMtype BAM SortedByCoordinate \
+--bamRemoveDuplicatesType UniqueIdenticalNotMulti \
 --quantMode TranscriptomeSAM \
 --outWigStrand Stranded"
 
