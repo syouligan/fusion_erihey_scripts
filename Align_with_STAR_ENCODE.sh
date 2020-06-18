@@ -58,7 +58,6 @@ inFile2=$inPath/$sample"_trimmed_R2.fastq.gz"
 echo "inFile1 $inFile1 inFile2 $inFile2"
 
 # Command to be executed
-# Command to be executed
 CommandPE="STAR --genomeDir $STARDir \
 --outFileNamePrefix $outDir/$sample. \
 --readFilesIn $inFile1 $inFile2 \
@@ -78,7 +77,6 @@ CommandPE="STAR --genomeDir $STARDir \
 --runThreadN $ncores \
 --limitBAMsortRAM 10000000000 \
 --outSAMtype BAM SortedByCoordinate \
---bamRemoveDuplicatesType UniqueIdenticalNotMulti \
 --quantMode TranscriptomeSAM \
 --outWigStrand Stranded"
 

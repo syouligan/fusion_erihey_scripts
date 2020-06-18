@@ -27,11 +27,11 @@ filenames <- filenames[! grepl("merged", filenames)]
 file.exists(filenames)
 
 # Count all reads aligning to exons
-fc_all <- featureCounts(files=filenames, annot.ext=gtffile, isGTFAnnotationFile=TRUE, GTF.featureType = "exon", GTF.attrType = "gene_id", GTF.attrType.extra = "exon_id", GTF.attrType.extra = "exon_id", useMetaFeatures = FALSE, strandSpecific = 2, nthreads = 16, isPairedEnd=TRUE, requireBothEndsMapped = TRUE, allowMultiOverlap = TRUE, minOverlap = 16, countMultiMappingReads = TRUE,  ignoreDup = FALSE )
+fc_all <- featureCounts(files=filenames, annot.ext=gtffile, isGTFAnnotationFile=TRUE, GTF.featureType = "exon", GTF.attrType = "gene_id", GTF.attrType.extra = "exon_id", useMetaFeatures = FALSE, strandSpecific = 2, nthreads = 16, isPairedEnd=TRUE, requireBothEndsMapped = TRUE, allowMultiOverlap = TRUE, minOverlap = 16, countMultiMappingReads = TRUE,  ignoreDup = FALSE )
 write.csv(fc_all$counts, "/share/ScratchGeneral/scoyou/sarah_projects/fusion_erihey/project_results/featureCounts/Exon_level_counts_all_reads.csv")
 
 idx <- match(fc_all$annotation$GeneID, gene_names$gene_id)
-fc_all$annotation$GeneSymbol <- gene_names$gene_name [idx]
+fc_all$annotation[ , 'GeneSymbol'] <- gene_names$gene_name [idx]
 write.csv(fc_all$annotation, "/share/ScratchGeneral/scoyou/sarah_projects/fusion_erihey/project_results/featureCounts/Exon_level_annotation_all_reads.csv")
 
 write.csv(fc_all$stat, "/share/ScratchGeneral/scoyou/sarah_projects/fusion_erihey/project_results/featureCounts/Exon_level_stats_all_reads.csv")
@@ -41,7 +41,7 @@ fc_dedup <- featureCounts(files=filenames, annot.ext=gtffile, isGTFAnnotationFil
 write.csv(fc_dedup$counts, "/share/ScratchGeneral/scoyou/sarah_projects/fusion_erihey/project_results/featureCounts/Exon_level_counts_dedup_reads.csv")
 
 idx <- match(fc_dedup$annotation$GeneID, gene_names$gene_id)
-fc_dedup$annotation$GeneSymbol <- gene_names$gene_name [idx]
+fc_dedup$annotation[ , 'GeneSymbol'] <- gene_names$gene_name [idx]
 write.csv(fc_dedup$annotation, "/share/ScratchGeneral/scoyou/sarah_projects/fusion_erihey/project_results/featureCounts/Exon_level_annotation_dedup_reads.csv")
 
 write.csv(fc_dedup$stat, "/share/ScratchGeneral/scoyou/sarah_projects/fusion_erihey/project_results/featureCounts/Exon_level_stats_dedup_reads.csv")
@@ -51,7 +51,7 @@ fc_dedup_unique <- featureCounts(files=filenames, annot.ext=gtffile, isGTFAnnota
 write.csv(fc_dedup_unique$counts, "/share/ScratchGeneral/scoyou/sarah_projects/fusion_erihey/project_results/featureCounts/Exon_level_counts_dedup_unique_reads.csv")
 
 idx <- match(fc_dedup_unique$annotation$GeneID, gene_names$gene_id)
-fc_dedup_unique$annotation$GeneSymbol <- gene_names$gene_name [idx]
+fc_dedup_unique$annotation[ , 'GeneSymbol'] <- gene_names$gene_name [idx]
 write.csv(fc_dedup_unique$annotation, "/share/ScratchGeneral/scoyou/sarah_projects/fusion_erihey/project_results/featureCounts/Exon_level_annotation_dedup_unique_reads.csv")
 
 write.csv(fc_dedup_unique$stat, "/share/ScratchGeneral/scoyou/sarah_projects/fusion_erihey/project_results/featureCounts/Exon_level_stats_dedup_unique_reads.csv")
