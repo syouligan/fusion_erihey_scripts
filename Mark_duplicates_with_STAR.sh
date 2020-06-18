@@ -4,7 +4,7 @@
 #######
 
 # Number of cores
-ncores=6
+ncores=16
 
 # Experimental info (update for single or paired reads, and readlength). Set paired to "yes" if appropriate. NOTE: reads are assumed to be stranded.
 paired="yes"
@@ -58,6 +58,7 @@ echo "inFile1 $inFile1"
 CommandPE="STAR --runThreadN $ncores \
 --runMode inputAlignmentsFromBAM \
 --bamRemoveDuplicatesType UniqueIdenticalNotMulti \
+ --limitBAMsortRAM 32000000000 \
 --inputBAMfile $inFile1 \
 --outFileNamePrefix $outDir/$sample'.Aligned.sortedByCoord.out.dupmarked.bam'"
 
